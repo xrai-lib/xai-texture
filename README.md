@@ -24,3 +24,8 @@ Navigate to the project's root directory:
 
 ```bash
 cd xai-texture
+```
+Create a Conda environment named xai using the provided xai.yml file:
+```bash
+conda env create -f xai.yml
+```

@@ -6,7 +6,7 @@ This repository hosts the source code and related materials for the paper titled
 
 Before setting up the project, ensure you have the following installed on your system:
 - Git
-- Anaconda or Miniconda
+- Anaconda
 
 ## Installation
 

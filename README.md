@@ -41,3 +41,9 @@ Change to the src directory:
 ```bash
 cd src
 ```
+Execute the main application:
+```bash
+python main.py
+```
+## Usage
+After completing the installation steps, you are ready to run the application. The main.py script is configured to demonstrate our methodology's application to breast cancer segmentation and explainability. Modify the script or create new ones as needed to explore the dataset and models further.

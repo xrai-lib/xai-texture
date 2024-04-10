@@ -29,3 +29,15 @@ Create a Conda environment named xai using the provided xai.yml file:
 ```bash
 conda env create -f xai.yml
 ```
+This command creates a Conda environment with all the necessary dependencies installed.
+
+### Step 3: Activate the Environment
+Activate the newly created environment using:
+```bash
+conda activate xai
+```
+### Step 4: Run the Application
+Change to the src directory:
+```bash
+cd src
+```

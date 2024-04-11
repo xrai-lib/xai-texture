@@ -27,7 +27,7 @@ def dataset_module():
     
     #ensure dataset presence
     if not check_patch_dataset():
-        print("Downloading CBIS-DDSM-Patches Dataset...")
+        print("Downloading CBIS-DDSM-Patches Dataset... " + config.zip_url)
         download_file(config.zip_url, config.patch_zip_path)
         generate_patch_dataset()
 

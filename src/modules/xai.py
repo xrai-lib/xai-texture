@@ -1,6 +1,6 @@
 from utils import clear_screen
 from xai.GLCM import analyse_GLCM
-from xai.LTEM_Cosine_Similarity import cosine_similarity
+from xai.LTEM_Cosine_Similarity import cosine_similarity_analysis
 
 def prompt_analysis():
     print("1. GLCM feature Map Analysis")
@@ -21,6 +21,7 @@ def prompt_analysis():
     return choice
 
 def prompt_model():
+    clear_screen()
     print("1. DeeplapV3")
     print("2. FCN")
     print("3. U-Net")
@@ -51,8 +52,8 @@ def xai_module():
             analyse_GLCM(prompt_model())
 
         else:
-            cosine_similarity()
+            cosine_similarity_analysis(prompt_model())
             
-        choice_analysis = prompt_analysis(prompt_model())
+        choice_analysis = prompt_analysis()
 
     return

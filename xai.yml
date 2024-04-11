@@ -148,6 +148,7 @@ dependencies:
       - aliyun-python-sdk-kms==2.16.2
       - autorom==0.4.2
       - autorom-accept-rom-license==0.6.1
+      - beautifulsoup4==4.12.3
       - cffi==1.16.0
       - click==8.1.7
       - cloudpickle==3.0.0
@@ -169,6 +170,9 @@ dependencies:
       - jmespath==0.10.0
       - joblib==1.3.2
       - kiwisolver==1.4.5
+      - lazy-loader==0.4
+      - lxml==5.2.1
+      - mahotas==1.4.14
       - markdown==3.6
       - markdown-it-py==3.0.0
       - matplotlib==3.8.3
@@ -206,13 +210,16 @@ dependencies:
       - requests==2.28.2
       - rich==13.4.2
       - safetensors==0.4.2
+      - scikit-image==0.23.1
       - scikit-learn==1.2.2
       - scipy==1.12.0
       - setuptools==60.2.0
       - shimmy==0.2.1
+      - soupsieve==2.5
       - tabulate==0.9.0
       - termcolor==2.4.0
       - threadpoolctl==3.4.0
+      - tifffile==2024.2.12
       - tokenizers==0.15.2
       - tomli==2.0.1
       - torch==2.1.1

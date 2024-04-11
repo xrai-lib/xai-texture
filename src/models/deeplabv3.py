@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 import pandas as pd
-from utils import calculate_iou, add_to_results
+from utils import calculate_iou, add_to_test_results
 import config
 
 def train_deeplab(dataset, data_loader):
@@ -109,6 +109,6 @@ def test_deeplab(result_path, choice, data_loader):
     average_iou = np.mean(iou_scores)
 
     os.makedirs(config.results_path, exist_ok=True)
-    add_to_results(result_path, choice, average_iou)
+    add_to_test_results(result_path, choice, average_iou)
 
     print(f"Testing Successful. Results added to " + result_path)

@@ -5,6 +5,7 @@ from PIL import Image
 import numpy as np
 import os
 import config
+from utils import add_to_LTEM_results
 
 # Define a function to load the models
 def load_model(model_path):
@@ -34,10 +35,10 @@ def get_feature_maps(model, input_image, layer_name):
 
     return activations[0]
 
-def cosine_similarity(model):
+def calculate_cosine_similarity(model, feature):
 
     # Prepare a test image
-    test_image_path = config.patch_dataset_path + 'test/images/Mass-Training_P_00133_LEFT_CC_crop7.jpg'
+    test_image_path = config.patch_dataset_path + '/test/images/Mass-Training_P_00133_LEFT_CC_crop7.jpg'
     test_image = Image.open(test_image_path).convert("RGB")
 
     # Define a transform for the test image
@@ -52,10 +53,17 @@ def cosine_similarity(model):
 
     # Load both trained models
 
-    if model == 0:
-        model1 = load_model('deeplabv3_complete_model.pth')
-        model2 = load_model('feature training from MLOPS/deeplabv3_model_texture2_out_of_9.pth')
+    if model == 1:
+        model1 = load_model(config.saved_models_path + '/Deeplab/Feature_10/deeplab_v3_segmentation.pth')
+        model2 = load_model(config.saved_models_path + '/Deeplab/Feature_' + str(feature) + '/deeplab_v3_segmentation.pth')
+        result_path = config.results_path + '/LTEM_Cosine_Similarity/Deeplab_LTEM.csv'
 
+    elif model == 2:
+        model1 = load_model(config.saved_models_path + '/FCN/Feature_10/fcn_resnet101_epoch20_segmentation.pth')
+        model2 = load_model(config.saved_models_path + '/FCN/Feature_' + str(feature) + '/fcn_resnet101_epoch20_segmentation.pth')
+        result_path = config.results_path + '/LTEM_Cosine_Similarity/FCN_LTEM.csv'
+
+    result = []
     # Compare the feature maps from different layers
     layers = ['layer1', 'layer2', 'layer3', 'layer4']
     for layer_name in layers:
@@ -72,4 +80,13 @@ def cosine_similarity(model):
 
         # Calculate the average similarity
         average_similarity = np.mean(similarities)
-        print(f"Average cosine similarity between feature maps in {layer_name}: {average_similarity:.4f}")
+        result.append(average_similarity)
+
+    os.makedirs(config.results_path + '/LTEM_Cosine_Similarity', exist_ok=True)
+    add_to_LTEM_results(result_path, feature, result)
+    print("Results are stored in " + result_path)
+
+def cosine_similarity_analysis(model):
+    print("Conducting Cosine Similarity Analysis...")
+    for i in range(1, 10):
+        calculate_cosine_similarity(model, i)

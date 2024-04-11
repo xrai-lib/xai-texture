@@ -126,10 +126,10 @@ def test_model():
     data_loader = create_data_loader(dataset_choice)
 
     if model_choice == 1:
-         test_deeplab(config.results_path + '/Deeplab.csv', dataset_choice, data_loader)
+         test_deeplab(config.results_path + '/Deeplab_test.csv', dataset_choice, data_loader)
     elif model_choice == 2:
-         test_fcn(config.results_path + '/FCN.csv', dataset_choice, data_loader)
+         test_fcn(config.results_path + '/FCN_test.csv', dataset_choice, data_loader)
     else:
-         test_unet(config.results_path + '/UNET.csv', dataset_choice, data_loader)
+         test_unet(config.results_path + '/UNET_test.csv', dataset_choice, data_loader)
          
     return

@@ -1,6 +1,6 @@
 import os
 
-zip_url = "https://drive.google.com/file/d/150xHaqYwEy_H64VaF7kVOMOOdnG5cy-3/view?usp=sharing"
+zip_url = "https://zenodo.org/records/10960991/files/CBIS-DDSM-Patches.zip?download=1"
 
 #necessary path variables
 data_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir)) + "/data"

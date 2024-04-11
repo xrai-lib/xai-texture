@@ -85,8 +85,7 @@ def glcm_properties(image):
     
     return properties
 
-# Compute and visualize GLCM properties for each feature map
-# Compute and visualize GLCM properties for each feature map
+# Compute GLCM properties for each feature map
 def compute_glcm_properties(feature_maps, gray_image):
 
     num_feature_maps = feature_maps.size(1)

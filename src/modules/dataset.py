@@ -1,7 +1,7 @@
 import os
 import config
 from preprocessing.TEM import generate_TEM_dataset
-from preprocessing.patches import generate_patch_dataset
+from preprocessing.patches import generate_patch_dataset, download_file
 from utils import clear_screen
 
 def check_patch_dataset():
@@ -27,6 +27,8 @@ def dataset_module():
     
     #ensure dataset presence
     if not check_patch_dataset():
+        print("Downloading CBIS-DDSM-Patches Dataset...")
+        download_file(config.zip_url, config.patch_zip_path)
         generate_patch_dataset()
 
     if not check_TEM_dataset():

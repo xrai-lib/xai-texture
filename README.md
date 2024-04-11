@@ -17,7 +17,7 @@ Clone this repository to your local machine using the following command:
 ```bash
 git clone https://github.com/xrai-lib/xai-texture.git
 ```
-Download the modified version of the CBIS-DDSM dataset: https://drive.google.com/file/d/150xHaqYwEy_H64VaF7kVOMOOdnG5cy-3/view?usp=drive_link
+Download the modified version of the CBIS-DDSM dataset: https://zenodo.org/records/10960991/files/CBIS-DDSM-Patches.zip?download=1
 and add it to the 'xai-texture/data' folder.
 
 ### Step 2: Create the Conda Environment

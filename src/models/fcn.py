@@ -74,8 +74,13 @@ def train_fcn(dataset, data_loader):
 def test_fcn(result_path, choice, data_loader):
     print("Testing FCN on Feature: " + str(choice))
 
+    model_path = config.saved_models_path + '/FCN/Feature_' + str(choice) + '/fcn_resnet101_epoch20_segmentation.pth'
+
+    if not os.path.exists(model_path):
+        print("The given model does not exist, Train the model before testing.")
+        return
     # Load the downloaded model
-    model = torch.load(config.saved_models_path + '/FCN/Feature_' + str(choice) + '/fcn_resnet101_epoch20_segmentation.pth', map_location=torch.device('cpu'))
+    model = torch.load(model_path, map_location=torch.device('cpu'))
 
     # Move the model to GPU if available
     if torch.cuda.is_available():

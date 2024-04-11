@@ -79,7 +79,14 @@ def test_deeplab(result_path, choice, data_loader):
 
     print("Testing Deeplab on Feature: " + str(choice))
     # Assuming the model is initially loaded for CPU
-    model = torch.load(config.saved_models_path + '/Deeplab/Feature_' + str(choice) + '/deeplab_v3_segmentation.pth', map_location=torch.device('cpu'))
+
+    model_path = config.saved_models_path + '/Deeplab/Feature_' + str(choice) + '/deeplab_v3_segmentation.pth'
+
+    if not os.path.exists(model_path):
+        print("The given model does not exist, Train the model before testing.")
+        return
+
+    model = torch.load(model_path, map_location=torch.device('cpu'))
 
     # Move the model to GPU if available
     if torch.cuda.is_available():

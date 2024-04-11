@@ -29,7 +29,6 @@ def model_module():
     #perform user requested tasks
     while choice != 3:
         
-        
         if choice == 1:
             train_model()
 
@@ -37,7 +36,6 @@ def model_module():
         elif choice == 2:
             test_model()
             
-        
         choice = prompt()
 
     return

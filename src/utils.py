@@ -38,7 +38,7 @@ def add_to_test_results(file_path, dataset, value):
         df.update([dataset, value])
     else:
         # Append a new row
-        df = df._append([dataset, value])
+        df = df._append({'Dataset' : dataset, 'IOU Accuracy' : value}, ignore_index=True)
     
     # Write the DataFrame to CSV
     df.to_csv(file_path, index=False)

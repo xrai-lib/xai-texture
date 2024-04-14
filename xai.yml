@@ -1,4 +1,0 @@
-name: xai
-channels:
-  - conda-forge
-  - defaults

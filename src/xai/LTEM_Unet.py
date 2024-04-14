@@ -12,27 +12,26 @@ import config
 from utils import add_to_LTEM_unet_results
 
 
-# Move the model to GPU if available
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-image_path= config.patch_dataset_path + '/test/images/Mass-Training_P_00133_LEFT_CC_crop7.jpg'
-
-# Load the image from the file path
-input_image = Image.open(image_path).convert("RGB")
-
-# Define the image transformations
-image_transform = transforms.Compose([
-    transforms.Resize((512, 512)),  # Resize the image to 512x512 pixels
-    transforms.ToTensor(),  # Convert the image to a PyTorch tensor
-    transforms.Normalize(mean=[0., 0., 0.], std=[1., 1., 1.])  # Normalize the image tensor
-])
-
-# Apply transformations and move the image to GPU
-input_image = image_transform(input_image)
-input_image = input_image.unsqueeze(0)  # Add a batch dimension
-input_image = input_image.to(device)
-
 def get_feature_maps_original_model():
+    # Move the model to GPU if available
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    image_path= config.patch_dataset_path + '/test/images/Mass-Training_P_00133_LEFT_CC_crop7.jpg'
+
+    # Load the image from the file path
+    input_image = Image.open(image_path).convert("RGB")
+
+    # Define the image transformations
+    image_transform = transforms.Compose([
+        transforms.Resize((512, 512)),  # Resize the image to 512x512 pixels
+        transforms.ToTensor(),  # Convert the image to a PyTorch tensor
+        transforms.Normalize(mean=[0., 0., 0.], std=[1., 1., 1.])  # Normalize the image tensor
+    ])
+
+    # Apply transformations and move the image to GPU
+    input_image = image_transform(input_image)
+    input_image = input_image.unsqueeze(0)  # Add a batch dimension
+    input_image = input_image.to(device)
     # Original Model
     # Load the pre-trained model
     config_file_original = config.saved_models_path + '/UNET/Feature_10/unet-s5-d16_fcn_4xb4-160k_cityscapes-512x1024.py'

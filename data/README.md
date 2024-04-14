@@ -1,13 +1,5 @@
 # Dataset Description
 
-## Original Dataset
-The original dataset used in this project is the Curated Breast Imaging Subset of DDSM (CBIS-DDSM), as described in the following paper:
-
-- **Paper**: Lee RS, Gimenez F, Hoogi A, Miyake KK, Gorovoy M, Rubin DL. "A curated mammography data set for use in computer-aided detection and diagnosis research." *Sci Data*. 2017 Dec 19;4:170177. 
-- **DOI**: [10.1038/sdata.2017.177](https://doi.org/10.1038/sdata.2017.177)
-- **PMID**: 29257132
-- **PMCID**: PMC5735920
-
 ## Preprocessed Dataset
 The CBIS-DDSM dataset has been preprocessed to create a cropped version based on the region of interest (ROI) of the mask area. This preprocessing step resulted in the creation of the `CBIS-DDSM-Patches` folder, which contains both training and test sets. Each set includes cancer images along with their corresponding masks.
 

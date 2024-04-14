@@ -2,4 +2,3 @@ name: xai
 channels:
   - conda-forge
   - defaults
-prefix: /ediss_data/ediss4/sarosh/anaconda3/envs/xai

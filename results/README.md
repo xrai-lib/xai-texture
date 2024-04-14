@@ -2,9 +2,7 @@
 
 ## Model Evaluation
 
-IoU metric for cancer mask are used to evaluate the models for test dataset for Unet, Deeplabv3 and FCN. Pixel accuracy is also calculated for UNet. The results are saved in csv file. The test result for Unet, Deeplabv3 and FCN is saved in UNET_test.csv, deeplab_test.csv and FCN_test.csv file correspondingly.
-
-there are three evaluation files:
+There are three evaluation files:
 
 - `Deeplab_test.csv`
 - `FCN_test.csv`

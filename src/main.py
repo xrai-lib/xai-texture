@@ -37,6 +37,7 @@ def main():
             model_module()
         
         elif choice == 2:
+            dataset_module()
             xai_module()
 
         choice = prompt()

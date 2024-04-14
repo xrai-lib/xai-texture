@@ -1,5 +1,8 @@
 from utils import clear_screen
 from xai.GLCM import analyse_GLCM
+from xai.GLCM_Unet import analyze_GLCM_Unet
+from xai.LTEM_Unet import LTEM_analysis_unet
+
 from xai.LTEM_Cosine_Similarity import cosine_similarity_analysis
 
 def prompt_analysis():
@@ -42,17 +45,23 @@ def prompt_model():
 def xai_module():
     clear_screen() #clears the terminal screen
     print("Welcome to the Texture Analysis Module")
-
+    
     choice_analysis = prompt_analysis()
-
+    choice = prompt_model()
     #perform user requested tasks
     while choice_analysis != 3:
         
         if choice_analysis == 1:
-            analyse_GLCM(prompt_model())
+            if choice == 3:
+                 analyze_GLCM_Unet(choice)
+            else:
+                analyse_GLCM(choice)
 
         else:
-            cosine_similarity_analysis(prompt_model())
+            if choice == 3:
+                LTEM_analysis_unet()
+            else: 
+                cosine_similarity_analysis(choice)
             
         choice_analysis = prompt_analysis()
 

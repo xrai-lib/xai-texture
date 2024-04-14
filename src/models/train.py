@@ -115,6 +115,19 @@ def create_data_loader(dataset_choice):
     )
     return DataLoader(dataset, batch_size=8, shuffle=True, drop_last = True)
 
+def get_images_dir(dataset_choice):
+
+    # Create your datasets and data loaders
+    images_dir = ''
+    if dataset_choice == 10:
+        train_images_dir = config.patch_dataset_path + '/train/images'
+        test_images_dir = config.patch_dataset_path + '/test/images'
+    else:
+        train_images_dir = config.TEM_dataset_path + '/train/textures/Feature_' + str(dataset_choice)
+        test_images_dir = config.TEM_dataset_path + '/test/textures/Feature_' + str(dataset_choice)
+
+    return train_images_dir,test_images_dir
+
 def train_model():
     clear_screen() #clears the terminal screen
     
@@ -124,12 +137,14 @@ def train_model():
     dataset_choice = prompt_dataset()
 
     data_loader = create_data_loader(dataset_choice)
+    train_images_dir, test_images_dir = get_images_dir(dataset_choice)
+    mask_images_dir = config.maskdataset_path_mmsegmentation
 
     if model_choice == 1:
          train_deeplab(config.saved_models_path + '/Deeplab/Feature_' + str(dataset_choice), data_loader)
     elif model_choice == 2:
          train_fcn(config.saved_models_path + '/FCN/Feature_' + str(dataset_choice), data_loader)
     else:
-         train_unet(config.saved_models_path + '/UNET/Feature_' + str(dataset_choice), data_loader)
+         train_unet(config.saved_models_path + '/UNET/Feature_' + str(dataset_choice), train_images_dir, test_images_dir, mask_images_dir)
          
     return

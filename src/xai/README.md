@@ -1,6 +1,9 @@
 # GLCM Analysis
+This Python script facilitates the analysis of texture features using Gray Level Co-occurrence Matrix (GLCM) properties. GLCM features provide a way to characterize the texture of an image by considering the spatial relationship of pixels. The script extracts GLCM properties for both the original image and feature maps obtained from trained models, allowing for a comparison of texture characteristics. For this we used Mahotas.
 
-This Python script facilitates the analysis of texture features using Gray Level Co-occurrence Matrix (GLCM) properties. GLCM features provide a way to characterize the texture of an image by considering the spatial relationship of pixels. The script extracts GLCM properties for both the original image and feature maps obtained from trained models, allowing for a comparison of texture characteristics.
+Luis Pedro Coelho. "Mahotas: Open source software for scriptable computer vision" in Journal of Open Research Software, vol 1, 2013.
+- **DOI**: [10.5334/jors.ac](https://doi.org/10.5334/jors.ac)
+
 
 ## Description
 
@@ -38,19 +41,7 @@ These properties capture different aspects of the image's texture and can be use
 
 ## Usage
 
-To use this script, specify the model choice (1 for Deeplab, 2 for FCN), and call the `analyse_GLCM` function. The script will compute GLCM properties for the original image and feature maps obtained from the chosen model and save the results to a CSV file.
-
-## Dependencies
-
-The script requires the following Python libraries:
-- numpy
-- matplotlib
-- mahotas
-- skimage
-- torch
-- PIL
-- torchvision
-- os
+To use this script, specify the model choice (1 for Deeplab, 2 for FCN, 3 for UNet), and call the `analyse_GLCM` function for (Deeplabv3 and FCN), and `analyze_GLCM_Unet` function for Unet. The script will compute GLCM properties for the original image and feature maps obtained from the chosen model and save the results to a CSV file.
 
 Additionally, the `config` module and `utils.py` script are imported to access paths, configurations, and utility functions relevant to the project.
 
@@ -95,17 +86,8 @@ The cosine similarity analysis involves the following steps:
 
 ## Usage
 
-To use this script, specify the model choice (1 for Deeplab, 2 for FCN) and call the `cosine_similarity_analysis` function. The script will conduct cosine similarity analysis for LTEM models trained on different datasets compared to the original model.
+To use this script, specify the model choice (1 for Deeplab, 2 for FCN, 3 for UNet) and call the `cosine_similarity_analysis` function for (Deeplabv3 and FCN) and `LTEM_analysis_unet` function for UNet model. The script will conduct cosine similarity analysis for LTEM models trained on different datasets compared to the original model.
 
-## Dependencies
-
-The script requires the following Python libraries:
-- torch
-- sklearn
-- torchvision
-- PIL
-- numpy
-- os
 
 Additionally, the `config` module and `utils.py` script are imported to access paths, configurations, and utility functions relevant to the project.
 

@@ -8,43 +8,46 @@ Before setting up the project, ensure you have the following installed on your s
 - Git
 - Anaconda
 
-## Installation
+## Required Libraries and Installation steps
 
-### Step 1: Clone the Repository
+### Create conda environment with python>3.7
+1. conda create --name xai
+2. conda activate xai  
 
-Clone this repository to your local machine using the following command:
+### Install pytorch [official instructions](https://pytorch.org/get-started/locally/) according to your CUDA support.
 
-```bash
-git clone https://github.com/xrai-lib/xai-texture.git
-```
+#### CUDA support
 
-### Step 2: Create the Conda Environment
+The version used for the experiments for the paper is given below:
 
-Navigate to the project's root directory:
+3. pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu118
+ 
+#### With no CUDA support in Mac M chip
 
-```bash
-cd xai-texture
-```
-Create a Conda environment named xai using the provided xai.yml file:
-```bash
-conda env create -f xai.yml
-```
-This command creates a Conda environment with all the necessary dependencies installed.
+3. pip3 install torch torchvision torchaudio
 
-### Step 3: Activate the Environment
-Activate the newly created environment using:
-```bash
-conda activate xai
-```
-### Step 4: Run the Application
-Change to the src directory:
-```bash
-cd src
-```
-Execute the main application:
-```bash
-python main.py
-```
+### Install mmcv with mim  
+
+4. pip install -U openmim
+5. mim install mmengine==0.10.3
+6. mim install mmcv==2.1.0
+
+### Install mmsegmentation with pip  
+
+7. pip install mmsegmentation==1.2.2  
+
+### Install other dependencies 
+
+8. pip install ftfy==6.2.0 
+9. pip install regex==2023.12.25 
+10. pip install pandas opencv-python numpy
+
+### Clone the repository and run the project
+11. git clone https://github.com/xrai-lib/xai-texture.git
+12. cd xai-texture
+13. cd src
+14. python main.py
+
 ## Usage
 After completing the installation steps, you are ready to run the application. The main.py script is configured to demonstrate our methodology's application to breast cancer segmentation and explainability. The user interface will allow you to make use of all the functionalities available in the repository.
 
@@ -55,4 +58,7 @@ The original dataset used in this project is the Curated Breast Imaging Subset o
 - **DOI**: [10.1038/sdata.2017.177](https://doi.org/10.1038/sdata.2017.177)
 - **PMID**: 29257132
 - **PMCID**: PMC5735920
-   
+
+## Citation
+
+MMSegmentation Contributors (2020) MMSegmentation: OpenMMLab Semantic Segmentation Toolbox and Benchmark. https://github.com/open-mmlab/mmsegmentation

@@ -47,4 +47,12 @@ python main.py
 ```
 ## Usage
 After completing the installation steps, you are ready to run the application. The main.py script is configured to demonstrate our methodology's application to breast cancer segmentation and explainability. The user interface will allow you to make use of all the functionalities available in the repository.
+
+## Original Dataset
+The original dataset used in this project is the Curated Breast Imaging Subset of DDSM (CBIS-DDSM), as described in the following paper:
+
+- **Paper**: Lee RS, Gimenez F, Hoogi A, Miyake KK, Gorovoy M, Rubin DL. "A curated mammography data set for use in computer-aided detection and diagnosis research." *Sci Data*. 2017 Dec 19;4:170177. 
+- **DOI**: [10.1038/sdata.2017.177](https://doi.org/10.1038/sdata.2017.177)
+- **PMID**: 29257132
+- **PMCID**: PMC5735920
    

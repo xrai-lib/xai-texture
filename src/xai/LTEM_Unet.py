@@ -12,8 +12,8 @@ import config
 from utils import add_to_LTEM_unet_results
 
 
-def get_feature_maps_original_model():
-    # Move the model to GPU if available
+def get_image():
+     # Move the model to GPU if available
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     image_path= config.patch_dataset_path + '/test/images/Mass-Training_P_00133_LEFT_CC_crop7.jpg'
@@ -32,6 +32,11 @@ def get_feature_maps_original_model():
     input_image = image_transform(input_image)
     input_image = input_image.unsqueeze(0)  # Add a batch dimension
     input_image = input_image.to(device)
+    return input_image
+
+def get_feature_maps_original_model():
+    
+    input_image = get_image()
     # Original Model
     # Load the pre-trained model
     config_file_original = config.saved_models_path + '/UNET/Feature_10/unet-s5-d16_fcn_4xb4-160k_cityscapes-512x1024.py'
@@ -79,6 +84,7 @@ def get_feature_maps_original_model():
 result_list = []
 
 def LTEM_analysis_unet():
+    input_image = get_image()
     for j in range(9):
         featuremaps_original = get_feature_maps_original_model()
         

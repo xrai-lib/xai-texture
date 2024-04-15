@@ -16,13 +16,13 @@ Before setting up the project, ensure you have the following installed on your s
 
 ### Install pytorch [official instructions](https://pytorch.org/get-started/locally/) according to your CUDA support.
 
-#### CUDA support
+#### For Linux and Windows
 
 The version used for the experiments for the paper is given below:
 
 3. pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu118
  
-#### With no CUDA support in Mac M chip
+#### For Mac
 
 3. pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2
 

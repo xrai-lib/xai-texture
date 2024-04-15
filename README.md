@@ -24,7 +24,7 @@ The version used for the experiments for the paper is given below:
  
 #### With no CUDA support in Mac M chip
 
-3. pip3 install torch torchvision torchaudio
+3. pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2
 
 ### Install mmcv with mim  
 
@@ -40,7 +40,8 @@ The version used for the experiments for the paper is given below:
 
 8. pip install ftfy==6.2.0 
 9. pip install regex==2023.12.25 
-10. pip install pandas opencv-python numpy mahotas matplotlib
+10. pip install mahotas
+11. pip install scikit-image
 
 ### Clone the repository and run the project
 11. git clone https://github.com/xrai-lib/xai-texture.git

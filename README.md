@@ -38,10 +38,7 @@ The version used for the experiments for the paper is given below:
 
 ### Install other dependencies 
 
-8. pip install ftfy==6.2.0 
-9. pip install regex==2023.12.25 
-10. pip install mahotas
-11. pip install scikit-image
+8. pip install ftfy regex mahotas scikit-image scikit-learn opencv-python
 
 ### Clone the repository and run the project
 11. git clone https://github.com/xrai-lib/xai-texture.git

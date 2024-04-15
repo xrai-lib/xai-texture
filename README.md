@@ -11,40 +11,45 @@ Before setting up the project, ensure you have the following installed on your s
 ## Required Libraries and Installation steps
 
 ### Create conda environment with python>3.7
-1. conda create --name xai python=3.8
-2. conda activate xai  
+```bash
+conda create --name xai python=3.8
+conda activate xai
+```
 
 ### Install pytorch [official instructions](https://pytorch.org/get-started/locally/) according to your CUDA support.
 
 #### For Linux and Windows
 
 The version used for the experiments for the paper is given below:
-
-3. pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu118
- 
+```bash
+pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu118
+``` 
 #### For Mac
 
-3. pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2
-
+```bash
+pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2
+```
 ### Install mmcv with mim  
-
-4. pip install -U openmim
-5. mim install mmengine==0.10.3
-6. mim install mmcv==2.1.0
-
+```bash
+pip install -U openmim
+mim install mmengine==0.10.3
+mim install mmcv==2.1.0
+```
 ### Install mmsegmentation with pip  
-
-7. pip install mmsegmentation==1.2.2  
-
+```bash
+pip install mmsegmentation==1.2.2  
+```
 ### Install other dependencies 
-
-8. pip install ftfy regex mahotas scikit-image scikit-learn opencv-python
-
+```bash
+pip install ftfy regex mahotas scikit-image scikit-learn opencv-python
+```
 ### Clone the repository and run the project
-11. git clone https://github.com/xrai-lib/xai-texture.git
-12. cd xai-texture
-13. cd src
-14. python main.py
+```bash
+git clone https://github.com/xrai-lib/xai-texture.git
+cd xai-texture
+cd src
+python main.py
+```
 
 ## Usage
 After completing the installation steps, you are ready to run the application. The main.py script is configured to demonstrate our methodology's application to breast cancer segmentation and explainability. The user interface will allow you to make use of all the functionalities available in the repository.

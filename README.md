@@ -11,7 +11,7 @@ Before setting up the project, ensure you have the following installed on your s
 ## Required Libraries and Installation steps
 
 ### Create conda environment with python>3.7
-1. conda create --name xai
+1. conda create --name xai python=3.8
 2. conda activate xai  
 
 ### Install pytorch [official instructions](https://pytorch.org/get-started/locally/) according to your CUDA support.

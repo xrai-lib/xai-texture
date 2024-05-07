@@ -14,8 +14,10 @@ def convert_mask(mask_path, output_path):
 def list_mask_images(directory, output_file):
     mask_images = [os.path.splitext(mask_image)[0] for mask_image in os.listdir(directory) if mask_image.endswith('.png')]
     with open(output_file, 'w') as f:
-        for mask_image in mask_images:
-            f.write(mask_image + '\n')
+        for i, mask_image in enumerate(mask_images):
+            f.write(mask_image)
+            if i != len(mask_images) - 1:  # Check if it's not the last mask image
+                f.write('\n')  # Write newline character
 
 def preprocess_dataset_unet_from_patches():
 

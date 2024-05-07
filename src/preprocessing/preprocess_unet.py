@@ -33,22 +33,22 @@ def preprocess_dataset_unet_from_patches():
     if not os.path.exists(segmentation_class_dir):
         os.makedirs(segmentation_class_dir)
 
-        # Process train masks
-        for mask_image in os.listdir(train_masks_dir):
-            if mask_image.endswith('.png'):
-                mask_path = os.path.join(train_masks_dir, mask_image)
-                output_path = os.path.join(segmentation_class_dir, mask_image)
-                convert_mask(mask_path, output_path)
+    # Process train masks
+    for mask_image in os.listdir(train_masks_dir):
+        if mask_image.endswith('.png'):
+            mask_path = os.path.join(train_masks_dir, mask_image)
+            output_path = os.path.join(segmentation_class_dir, mask_image)
+            convert_mask(mask_path, output_path)
 
-        # List train mask image names in train.txt
-        list_mask_images(train_masks_dir, train_txt_file)
+    # List train mask image names in train.txt
+    list_mask_images(train_masks_dir, train_txt_file)
 
-        # Process test masks
-        for mask_image in os.listdir(test_masks_dir):
-            if mask_image.endswith('.png'):
-                mask_path = os.path.join(test_masks_dir, mask_image)
-                output_path = os.path.join(segmentation_class_dir, mask_image)
-                convert_mask(mask_path, output_path)
+    # Process test masks
+    for mask_image in os.listdir(test_masks_dir):
+        if mask_image.endswith('.png'):
+            mask_path = os.path.join(test_masks_dir, mask_image)
+            output_path = os.path.join(segmentation_class_dir, mask_image)
+            convert_mask(mask_path, output_path)
 
     # List test mask image names in val.txt
     list_mask_images(test_masks_dir, val_txt_file)

@@ -21,6 +21,10 @@ def get_feature_maps(model, input_image, layer_name):
     def hook(model, input, output):
         activations.append(output)
 
+    # Access the underlying model if model is wrapped in DataParallel
+    if isinstance(model, nn.DataParallel):
+        model = model.module
+
     # Register hook
     target_layer = getattr(model.backbone, layer_name)
     hook_handle = target_layer.register_forward_hook(hook)

@@ -91,6 +91,8 @@ def test_deeplab(result_path, choice, data_loader):
     # Move the model to GPU if available
     if torch.cuda.is_available():
         model = model.cuda()
+    else:
+        model = model.cpu()
 
     # Evaluate the model on the test dataset
     model.eval()

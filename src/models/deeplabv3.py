@@ -23,6 +23,7 @@ def train_deeplab(dataset, data_loader):
             model = nn.DataParallel(model)
         model = model.cuda()
     else:
+        model = model.cpu()
         print("CUDA is not available. Training on CPU.")
 
     # Define the optimizer and loss function

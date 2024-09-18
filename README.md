@@ -41,7 +41,8 @@ pip install mmsegmentation==1.2.2
 ```
 ### Install other dependencies 
 ```bash
-pip install ftfy regex mahotas scikit-image scikit-learn opencv-python
+pip install ftfy regex mahotas scikit-image scikit-learn opencv-python pathlib segmentation-models-pytorch
+
 ```
 ### Clone the repository and run the project
 ```bash

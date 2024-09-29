@@ -7,14 +7,14 @@ The CBIS-DDSM dataset has been preprocessed to create a cropped version based on
 Additionally, the `CBIS-DDSM-TEM-Features` folder contains nine subfolders labeled `Feature_1` through `Feature_9`. These features were extracted using Laws texture energy masks and include the following textures:
 
 1. L5E5 / E5L5
-2. R5S5 / S5R5
-3. L5S5 / S5L5
-4. L5R5 / R5L5
-5. E5S5 / S5E5
-6. E5R5 / R5E5
+2. L5S5 / S5L5
+3. L5R5 / R5L5
+4. E5S5 / S5E5
+5. E5R5 / R5E5
+6. R5S5 / S5R5
 7. S5S5
-8. R5R5
-9. E5E5
+8. E5E5
+9. R5R5
 
 ## Rights and Permissions
 This article is licensed under a Creative Commons Attribution 4.0 International License.

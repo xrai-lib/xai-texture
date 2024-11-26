@@ -10,6 +10,7 @@ from models.unet import test_unet
 from models.hrnet import test_hrnet
 from models.fpn import test_fpn
 from models.linknet import test_linknet
+from models.fcb_former import test_fcbformer
 import config
 
 def prompt_model():
@@ -19,12 +20,13 @@ def prompt_model():
     print("4. HR-Net")
     print("5. FPN-Net")
     print("6. Link-Net")
+    print("7. FCBFormer")
 
     choice = None
     while True:
             try:
-                choice = int(input("Select Model (1-6): "))
-                if 1 <= choice <= 6:
+                choice = int(input("Select Model (1-7): "))
+                if 1 <= choice <= 7:
                     break  # Exit the loop if the input is valid
                 else:
                     print("Please choose one of the 6 available functions.")
@@ -261,5 +263,8 @@ def test_model():
 
     elif model_choice == 6:
         test_linknet(config.results_path + "/Linknet/" + dataset + "Feature_" + str(feature_dataset_choice) + '/Linknet_test.csv', dataset, feature_dataset_choice,  data_loader)
+    
+    elif model_choice == 7:
+        test_fcbformer(config.results_path + "/FCBFormer/" + dataset + "Feature_" + str(feature_dataset_choice) + '/FCBFormer_test.csv', dataset, feature_dataset_choice,  data_loader)
 
     return

@@ -11,6 +11,11 @@ from timm.models.vision_transformer import _cfg
 from functools import partial
 from . import pvt_v2
 
+# for visualization
+import matplotlib.pyplot as plt
+from PIL import Image
+import imageio
+
 
 class RB(nn.Module):
     def __init__(self, in_channels, out_channels):
@@ -266,6 +271,49 @@ def train_fcbformer(save_path, data_loader, input_size=512):
     torch.save(model, os.path.join(save_path, 'fcbformer_segmentation.pth'))
 
 
+# Function to denormalize images for visualization
+def denormalize(image, mean, std):
+    mean = np.array(mean)
+    std = np.array(std)
+    image = image * std[:, None, None] + mean[:, None, None]  # Reverse normalization
+    return np.clip(image, 0, 1)  
+
+def visualize_segmentation(images, masks, predictions, output_folder, index):
+    # Define normalization parameters used in the data loader
+    mean = [0.485, 0.456, 0.406]
+    std = [0.229, 0.224, 0.225]
+
+    for i in range(images.shape[0]):  # Iterate through the batch
+        img = images[i].cpu().numpy()  # Get the image as a NumPy array
+        img = denormalize(img, mean, std).transpose(1, 2, 0)  # Denormalize and convert to HWC format
+
+        mask = masks[i].cpu().numpy().squeeze()  # Remove channel dimension if present
+        pred = predictions[i].cpu().numpy().squeeze()  # Remove channel dimension if present
+
+        # Plot the original image, mask, and prediction
+        fig, ax = plt.subplots(1, 3, figsize=(15, 5))
+        
+        # Original image
+        ax[0].imshow(img)
+        ax[0].set_title('Original Image')
+        ax[0].axis('off')
+
+        # Ground truth mask
+        ax[1].imshow(mask, cmap='gray')  # Ground truth
+        ax[1].set_title('Ground Truth Mask')
+        ax[1].axis('off')
+
+        # Predicted segmentation
+        ax[2].imshow(img)
+        ax[2].imshow(pred, cmap='jet', alpha=0.5)  # Overlay prediction on the original image
+        ax[2].set_title('Predicted Segmentation')
+        ax[2].axis('off')
+
+        #plt.tight_layout()
+        frame_path = os.path.join(output_folder, f"frame_{index:04d}.png")
+        plt.savefig(frame_path)
+        plt.close()
+
 # Testing function
 def test_fcbformer(result_path, dataset, feature_dataset_choice, data_loader, input_size=512):
     print("Testing FCBFormer on Feature: " + str(feature_dataset_choice) + " of " + dataset)
@@ -285,6 +333,11 @@ def test_fcbformer(result_path, dataset, feature_dataset_choice, data_loader, in
     model.eval()
     iou_scores = []
 
+    output_folder = os.path.join(config.results_path, "visualizations", dataset, f"Feature_{feature_dataset_choice}")
+    os.makedirs(output_folder, exist_ok=True)
+
+    frame_index = 0
+
     for images, masks in data_loader:
         if torch.cuda.is_available():
             images, masks = images.cuda(), masks.cuda()
@@ -292,13 +345,26 @@ def test_fcbformer(result_path, dataset, feature_dataset_choice, data_loader, in
         with torch.no_grad():
             outputs = model(images)
 
-        iou_score = calculate_iou(torch.sigmoid(outputs), masks)
+        predictions = torch.sigmoid(outputs) > 0.5  # Threshold to binary mask
+        iou_score = calculate_iou(predictions, masks)
         iou_scores.append(iou_score)
+
+        # Save visualization frames
+        visualize_segmentation(images, masks, predictions, output_folder, frame_index)
+        frame_index += images.size(0)
 
     average_iou = np.mean(iou_scores)
     print(f"Average IoU: {average_iou:.4f}")
 
-    os.makedirs(config.results_path, exist_ok=True)
-    add_to_test_results(result_path, dataset, feature_dataset_choice, average_iou)
+    # Generate GIF
+    gif_path = os.path.join(output_folder, "segmentation_visualization.gif")
+    create_gif(output_folder, gif_path)
 
-    print(f"Testing Successful. Results added to {result_path}")
+    add_to_test_results(result_path, dataset, feature_dataset_choice, average_iou)
+    print(f"Testing Successful. GIF saved at {gif_path}")
+
+
+def create_gif(frame_folder, gif_path):
+    frames = sorted([os.path.join(frame_folder, f) for f in os.listdir(frame_folder) if f.endswith(".png")])
+    images = [Image.open(frame) for frame in frames]
+    imageio.mimsave(gif_path, images, fps=2) 

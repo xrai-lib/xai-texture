@@ -89,13 +89,24 @@ def test_fpn(result_path, dataset, feature_dataset_choice, data_loader):
     print("Testing FPN on Feature: " + str(feature_dataset_choice) + " of " + dataset)
     # Assuming the model is initially loaded for CPU
 
+    model = smp.FPN(
+        encoder_name="resnet34",        # Ensure this matches the trained model's architecture
+        encoder_weights=None,          # No pretrained weights for testing
+        in_channels=3,                 # Input channels (e.g., RGB)
+        classes=1                      # Number of output classes
+    )
+
     model_path = config.saved_models_path + '/Fpn/' + dataset + '/Feature_' + str(feature_dataset_choice) + '/fpn_segmentation.pth'
 
     if not os.path.exists(model_path):
         print("The given model does not exist, Train the model before testing.")
         return
 
-    model = torch.load(model_path, map_location=torch.device('cpu'))
+    model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+
+    # Move the model to GPU if available
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model = model.to(device)
 
     # Evaluate the model on the test dataset
     model.eval()

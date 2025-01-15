@@ -95,7 +95,16 @@ def test_linknet(result_path, dataset, feature_dataset_choice, data_loader):
         print("The given model does not exist, Train the model before testing.")
         return
 
-    model = torch.load(model_path, map_location=torch.device('cpu'))
+    if feature_dataset_choice == 10:
+        model = smp.Linknet(
+            encoder_name="resnet34",        # Choose encoder, e.g., resnet34, resnet50
+            encoder_weights="imagenet",     # Use pretrained weights from ImageNet
+            in_channels=3,                  # Input channels (RGB images)
+            classes=1                       # Number of output classes
+        )
+        model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+    else:
+        model = torch.load(model_path, map_location=torch.device('cpu'))
 
     # Move the model to GPU if available
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

@@ -190,47 +190,31 @@ def create_data_loader(dataset_choice, feature_dataset_choice):
     return DataLoader(dataset, batch_size=4, shuffle=True, drop_last = True)
 
 def get_images_dir(dataset_choice, feature_dataset_choice):
-
-    # Create your datasets and data loaders
-    images_dir = ''
+    """
+    Retrieve paths for training images, testing images, and testing masks based on dataset and feature choices.
+    """
+    dataset_paths = {
+        1: config.CBIS_DDSM_dataset_path,
+        2: config.CBIS_DDSM_CLAHE_dataset_path,
+        3: config.HAM_dataset_path,
+        4: config.HAM_CLAHE_dataset_path,
+        5: config.POLYP_dataset_path,
+        6: config.POLYP_CLAHE_dataset_path
+    }
     
-    if dataset_choice == 1:
-        if feature_dataset_choice == 10:
-            train_images_dir = config.CBIS_DDSM_dataset_path + '/train/images'
-            test_images_dir = config.CBIS_DDSM_dataset_path + '/test/images'
-        else:
-            train_images_dir = config.CBIS_DDSM_dataset_path + '/train/textures/Feature_' + str(feature_dataset_choice)
-            test_images_dir = config.CBIS_DDSM_dataset_path + '/test/textures/Feature_' + str(feature_dataset_choice)
-        test_masks_dir = config.CBIS_DDSM_dataset_path + '/test/masks'
-    elif dataset_choice == 2:
-        if feature_dataset_choice == 10:
-            train_images_dir = config.CBIS_DDSM_CLAHE_dataset_path + '/train/images'
-            test_images_dir = config.CBIS_DDSM_CLAHE_dataset_path + '/test/images'
-
-        else:
-            train_images_dir = config.CBIS_DDSM_CLAHE_dataset_path + '/train/textures/Feature_' + str(feature_dataset_choice)
-            test_images_dir = config.CBIS_DDSM_CLAHE_dataset_path + '/test/textures/Feature_' + str(feature_dataset_choice)
-        test_masks_dir = config.CBIS_DDSM_CLAHE_dataset_path + '/test/masks'
-    elif dataset_choice == 3:
-        if feature_dataset_choice == 10:
-            train_images_dir = config.HAM_dataset_path + '/train/images'
-            test_images_dir = config.HAM_dataset_path + '/test/images'
-
-        else:
-            train_images_dir = config.HAM_dataset_path + '/train/textures/Feature_' + str(feature_dataset_choice)
-            test_images_dir = config.HAM_dataset_path + '/test/textures/Feature_' + str(feature_dataset_choice)
-        test_masks_dir = config.HAM_dataset_path + '/test/masks'
-    elif dataset_choice == 4:
-        if feature_dataset_choice == 10:
-            train_images_dir = config.HAM_CLAHE_dataset_path + '/train/images'
-            test_images_dir = config.HAM_CLAHE_dataset_path + '/test/images'
-
-        else:
-            train_images_dir = config.HAM_CLAHE_dataset_path + '/train/textures/Feature_' + str(feature_dataset_choice)
-            test_images_dir = config.HAM_CLAHE_dataset_path + '/test/textures/Feature_' + str(feature_dataset_choice)
-        test_masks_dir = config.HAM_dataset_path + '/test/masks'
-    return train_images_dir,test_images_dir,test_masks_dir
-
+    if dataset_choice not in dataset_paths:
+        raise ValueError(f"Invalid dataset_choice: {dataset_choice}")
+    
+    base_path = dataset_paths[dataset_choice]
+    train_dir_suffix = '/train/images' if feature_dataset_choice == 10 else f'/train/textures/Feature_{feature_dataset_choice}'
+    test_dir_suffix = '/test/images' if feature_dataset_choice == 10 else f'/test/textures/Feature_{feature_dataset_choice}'
+    test_masks_suffix = '/test/masks'
+    
+    train_images_dir = base_path + train_dir_suffix
+    test_images_dir = base_path + test_dir_suffix
+    test_masks_dir = base_path + test_masks_suffix
+    
+    return train_images_dir, test_images_dir, test_masks_dir
 
 def test_model():
     clear_screen() #clears the terminal screen

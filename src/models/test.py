@@ -104,17 +104,29 @@ class CancerDataset(Dataset):
 
     def __getitem__(self, idx):
         image_name = self.images[idx]
+        
+        # Skip unwanted files like .DS_Store
+        while image_name == ".DS_Store" or not image_name.endswith(('.jpg', '.jpeg', '.png', '.bmp', '.tiff')):
+            idx += 1
+            if idx >= len(self.images):
+                raise StopIteration("No more valid images in the dataset.")
+            image_name = self.images[idx]
+
         image_path = os.path.join(self.images_dir, image_name)
         mask_path = os.path.join(self.masks_dir, image_name.split('.')[0] + '.png')
-        image = Image.open(image_path).convert("RGB")
-        mask = Image.open(mask_path).convert("L")
-        
+
+        try:
+            image = Image.open(image_path).convert("RGB")
+            mask = Image.open(mask_path).convert("L")
+        except Exception as e:
+            return self.__getitem__(idx + 1)
+
         if self.image_transform:
             image = self.image_transform(image)
-        
+
         if self.mask_transform:
             mask = self.mask_transform(mask)
-        
+
         return image, mask
 
 def create_data_loader(dataset_choice, feature_dataset_choice):

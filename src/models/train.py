@@ -10,10 +10,12 @@ from models.unet import train_unet
 from models.hrnet import train_hrnet
 from models.fpn import train_fpn
 from models.linknet import train_linknet
+from models.fcb_former import train_fcbformer
 
 import config
 import cv2
 import numpy as np
+import time
 
 
 def prompt_model():
@@ -23,15 +25,16 @@ def prompt_model():
     print("4. HR-Net")
     print("5. FPN-Net")
     print("6. Link-Net")
+    print("7. FCBFormer")
 
     choice = None
     while True:
             try:
-                choice = int(input("Select Model (1-6): "))
-                if 1 <= choice <= 6:
+                choice = int(input("Select Model (1-7): "))
+                if 1 <= choice <= 7:
                     break  # Exit the loop if the input is valid
                 else:
-                    print("Please choose one of the 6 available functions.")
+                    print("Please choose one of the 7 available functions.")
             except ValueError:
                 print("That's not an integer. Please try again.")
 
@@ -101,7 +104,9 @@ class CancerDataset(Dataset):
         self.masks_dir = masks_dir
         self.image_transform = image_transform
         self.mask_transform = mask_transform
-        self.images = os.listdir(images_dir)
+        # work around for now in MacOS as it was reading .DS_Store file. Please update the list in case of any new file extension.
+        valid_img_extensions = (".jpg", ".jpeg", ".png")
+        self.images = [f for f in os.listdir(images_dir) if f.endswith(valid_img_extensions)]
 
     def __len__(self):
         return len(self.images)
@@ -314,6 +319,7 @@ def train_model():
     elif dataset_choice == 6:
         dataset = 'POLYP_CLAHE'
 
+    start_time = time.time()
     if model_choice == 1:
         train_deeplab(config.saved_models_path + '/Deeplab/'+dataset+'/Feature_' + str(feature_dataset_choice), data_loader)
 
@@ -331,5 +337,12 @@ def train_model():
 
     elif model_choice == 6:
         train_linknet(config.saved_models_path + '/Linknet/'+dataset+'/Feature_' + str(feature_dataset_choice), data_loader)
+    
+    elif model_choice == 7:
+        train_fcbformer(save_path=config.saved_models_path + '/FCBFormer/' + dataset + '/Feature_' + str(feature_dataset_choice), data_loader=data_loader)
+    
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"Execution time: {elapsed_time:.2f} seconds")
 
     return

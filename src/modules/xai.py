@@ -72,16 +72,17 @@ def prompt_dataset():
     return choice_dataset
 
 def xai_module():
-    clear_screen() #clears the terminal screen
+    clear_screen()
     print("Welcome to the Texture Analysis Module")
-    
-    choice_analysis = prompt_analysis()
-    choice_model = prompt_model()
-    choice_dataset = prompt_dataset()
 
-    #perform user requested tasks
-    while choice_analysis != 3:
+    while True:
+        choice_analysis = prompt_analysis()
+        if choice_analysis == 3:
+            break
         
+        choice_model = prompt_model()
+        choice_dataset = prompt_dataset()
+
         if choice_analysis == 1:
             if choice_model == 3:
                 analyze_GLCM_Unet(choice_dataset)
@@ -95,9 +96,7 @@ def xai_module():
                 LTEM_analysis_unet(choice_dataset)
             elif choice_model == 4:
                 LTEM_analysis_hrnet(choice_dataset)
-            else: 
+            else:
                 cosine_similarity_analysis(choice_model, choice_dataset)
-            
-        choice_analysis = prompt_analysis()
 
-    return
+    print("Exiting the Texture Analysis Module. Goodbye!")

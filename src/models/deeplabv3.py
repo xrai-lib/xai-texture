@@ -92,6 +92,10 @@ def test_deeplab(result_path, dataset, feature_dataset_choice, data_loader):
 
     model = torch.load(model_path, map_location=torch.device('cpu'))
 
+    # Move the model to GPU if available
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model = model.to(device)
+
     # Evaluate the model on the test dataset
     model.eval()
     iou_scores = []

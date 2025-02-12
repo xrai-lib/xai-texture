@@ -10,6 +10,7 @@ from models.unet import test_unet
 from models.hrnet import test_hrnet
 from models.fpn import test_fpn
 from models.linknet import test_linknet
+from models.fcb_former import test_fcbformer
 import config
 
 def prompt_model():
@@ -19,12 +20,13 @@ def prompt_model():
     print("4. HR-Net")
     print("5. FPN-Net")
     print("6. Link-Net")
+    print("7. FCBFormer")
 
     choice = None
     while True:
             try:
-                choice = int(input("Select Model (1-6): "))
-                if 1 <= choice <= 6:
+                choice = int(input("Select Model (1-7): "))
+                if 1 <= choice <= 7:
                     break  # Exit the loop if the input is valid
                 else:
                     print("Please choose one of the 6 available functions.")
@@ -102,17 +104,29 @@ class CancerDataset(Dataset):
 
     def __getitem__(self, idx):
         image_name = self.images[idx]
+        
+        # Skip unwanted files like .DS_Store
+        while image_name == ".DS_Store" or not image_name.endswith(('.jpg', '.jpeg', '.png', '.bmp', '.tiff')):
+            idx += 1
+            if idx >= len(self.images):
+                raise StopIteration("No more valid images in the dataset.")
+            image_name = self.images[idx]
+
         image_path = os.path.join(self.images_dir, image_name)
         mask_path = os.path.join(self.masks_dir, image_name.split('.')[0] + '.png')
-        image = Image.open(image_path).convert("RGB")
-        mask = Image.open(mask_path).convert("L")
-        
+
+        try:
+            image = Image.open(image_path).convert("RGB")
+            mask = Image.open(mask_path).convert("L")
+        except Exception as e:
+            return self.__getitem__(idx + 1)
+
         if self.image_transform:
             image = self.image_transform(image)
-        
+
         if self.mask_transform:
             mask = self.mask_transform(mask)
-        
+
         return image, mask
 
 def create_data_loader(dataset_choice, feature_dataset_choice):
@@ -176,47 +190,31 @@ def create_data_loader(dataset_choice, feature_dataset_choice):
     return DataLoader(dataset, batch_size=4, shuffle=True, drop_last = True)
 
 def get_images_dir(dataset_choice, feature_dataset_choice):
-
-    # Create your datasets and data loaders
-    images_dir = ''
+    """
+    Retrieve paths for training images, testing images, and testing masks based on dataset and feature choices.
+    """
+    dataset_paths = {
+        1: config.CBIS_DDSM_dataset_path,
+        2: config.CBIS_DDSM_CLAHE_dataset_path,
+        3: config.HAM_dataset_path,
+        4: config.HAM_CLAHE_dataset_path,
+        5: config.POLYP_dataset_path,
+        6: config.POLYP_CLAHE_dataset_path
+    }
     
-    if dataset_choice == 1:
-        if feature_dataset_choice == 10:
-            train_images_dir = config.CBIS_DDSM_dataset_path + '/train/images'
-            test_images_dir = config.CBIS_DDSM_dataset_path + '/test/images'
-        else:
-            train_images_dir = config.CBIS_DDSM_dataset_path + '/train/textures/Feature_' + str(feature_dataset_choice)
-            test_images_dir = config.CBIS_DDSM_dataset_path + '/test/textures/Feature_' + str(feature_dataset_choice)
-        test_masks_dir = config.CBIS_DDSM_dataset_path + '/test/masks'
-    elif dataset_choice == 2:
-        if feature_dataset_choice == 10:
-            train_images_dir = config.CBIS_DDSM_CLAHE_dataset_path + '/train/images'
-            test_images_dir = config.CBIS_DDSM_CLAHE_dataset_path + '/test/images'
-
-        else:
-            train_images_dir = config.CBIS_DDSM_CLAHE_dataset_path + '/train/textures/Feature_' + str(feature_dataset_choice)
-            test_images_dir = config.CBIS_DDSM_CLAHE_dataset_path + '/test/textures/Feature_' + str(feature_dataset_choice)
-        test_masks_dir = config.CBIS_DDSM_CLAHE_dataset_path + '/test/masks'
-    elif dataset_choice == 3:
-        if feature_dataset_choice == 10:
-            train_images_dir = config.HAM_dataset_path + '/train/images'
-            test_images_dir = config.HAM_dataset_path + '/test/images'
-
-        else:
-            train_images_dir = config.HAM_dataset_path + '/train/textures/Feature_' + str(feature_dataset_choice)
-            test_images_dir = config.HAM_dataset_path + '/test/textures/Feature_' + str(feature_dataset_choice)
-        test_masks_dir = config.HAM_dataset_path + '/test/masks'
-    elif dataset_choice == 4:
-        if feature_dataset_choice == 10:
-            train_images_dir = config.HAM_CLAHE_dataset_path + '/train/images'
-            test_images_dir = config.HAM_CLAHE_dataset_path + '/test/images'
-
-        else:
-            train_images_dir = config.HAM_CLAHE_dataset_path + '/train/textures/Feature_' + str(feature_dataset_choice)
-            test_images_dir = config.HAM_CLAHE_dataset_path + '/test/textures/Feature_' + str(feature_dataset_choice)
-        test_masks_dir = config.HAM_dataset_path + '/test/masks'
-    return train_images_dir,test_images_dir,test_masks_dir
-
+    if dataset_choice not in dataset_paths:
+        raise ValueError(f"Invalid dataset_choice: {dataset_choice}")
+    
+    base_path = dataset_paths[dataset_choice]
+    train_dir_suffix = '/train/images' if feature_dataset_choice == 10 else f'/train/textures/Feature_{feature_dataset_choice}'
+    test_dir_suffix = '/test/images' if feature_dataset_choice == 10 else f'/test/textures/Feature_{feature_dataset_choice}'
+    test_masks_suffix = '/test/masks'
+    
+    train_images_dir = base_path + train_dir_suffix
+    test_images_dir = base_path + test_dir_suffix
+    test_masks_dir = base_path + test_masks_suffix
+    
+    return train_images_dir, test_images_dir, test_masks_dir
 
 def test_model():
     clear_screen() #clears the terminal screen
@@ -261,5 +259,8 @@ def test_model():
 
     elif model_choice == 6:
         test_linknet(config.results_path + "/Linknet/" + dataset + "Feature_" + str(feature_dataset_choice) + '/Linknet_test.csv', dataset, feature_dataset_choice,  data_loader)
+    
+    elif model_choice == 7:
+        test_fcbformer(config.results_path + "/FCBFormer/" + dataset + "Feature_" + str(feature_dataset_choice) + '/FCBFormer_test.csv', dataset, feature_dataset_choice,  data_loader)
 
     return

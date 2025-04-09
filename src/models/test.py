@@ -43,12 +43,13 @@ def prompt_dataset():
     print("4. HAM10000_CLAHE")
     print("5. POLYP")
     print("6. POLYP_CLAHE")
+    print("7. CBIS_DDSM_PATCHES")
 
     choice = None
     while True:
             try:
-                choice = int(input("Select Dataset (1-6): "))
-                if 1 <= choice <= 6:
+                choice = int(input("Select Dataset (1-7): "))
+                if 1 <= choice <= 7:
                     break  # Exit the loop if the input is valid
                 else:
                     print("Please choose one of the 6 available datasets.")
@@ -97,29 +98,31 @@ class CancerDataset(Dataset):
         self.masks_dir = masks_dir
         self.image_transform = image_transform
         self.mask_transform = mask_transform
-        self.images = os.listdir(images_dir)
+
+        # Filter out invalid files
+        self.images = [
+            f for f in os.listdir(images_dir)
+            if f.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp', '.tiff')) and f != ".DS_Store"
+        ]
+        self.images.sort()  # Ensure consistent ordering
 
     def __len__(self):
         return len(self.images)
 
     def __getitem__(self, idx):
         image_name = self.images[idx]
-        
-        # Skip unwanted files like .DS_Store
-        while image_name == ".DS_Store" or not image_name.endswith(('.jpg', '.jpeg', '.png', '.bmp', '.tiff')):
-            idx += 1
-            if idx >= len(self.images):
-                raise StopIteration("No more valid images in the dataset.")
-            image_name = self.images[idx]
-
         image_path = os.path.join(self.images_dir, image_name)
-        mask_path = os.path.join(self.masks_dir, image_name.split('.')[0] + '.png')
+
+        # Handle mask with different possible formats
+        mask_name = os.path.splitext(image_name)[0] + ".png"  # Change this if masks have different extensions
+        mask_path = os.path.join(self.masks_dir, mask_name)
 
         try:
             image = Image.open(image_path).convert("RGB")
             mask = Image.open(mask_path).convert("L")
         except Exception as e:
-            return self.__getitem__(idx + 1)
+            print(f"Skipping {image_name} due to an error: {e}")
+            return self.__getitem__((idx + 1) % len(self.images))  # Move to next valid image safely
 
         if self.image_transform:
             image = self.image_transform(image)
@@ -127,15 +130,61 @@ class CancerDataset(Dataset):
         if self.mask_transform:
             mask = self.mask_transform(mask)
 
-        return image, mask
+        return image, mask, image_name  # Return the filename as well
+# class CancerDataset(Dataset):
+#     def __init__(self, images_dir, masks_dir, image_transform=None, mask_transform=None):
+#         self.images_dir = images_dir
+#         self.masks_dir = masks_dir
+#         self.image_transform = image_transform
+#         self.mask_transform = mask_transform
+#         self.images = os.listdir(images_dir)
+
+#     def __len__(self):
+#         return len(self.images)
+
+#     def __getitem__(self, idx):
+#         image_name = self.images[idx]
+        
+#         # Skip unwanted files like .DS_Store
+#         while image_name == ".DS_Store" or not image_name.endswith(('.jpg', '.jpeg', '.png', '.bmp', '.tiff')):
+#             idx += 1  # Move to the next index
+#             if idx >= len(self.images):  # Ensure we don't go out of bounds
+#                 raise StopIteration("No more valid images in the dataset.")
+#             image_name = self.images[idx]
+
+#         image_path = os.path.join(self.images_dir, image_name)
+#         mask_path = os.path.join(self.masks_dir, image_name.split('.')[0] + '.png')
+
+#         try:
+#             image = Image.open(image_path).convert("RGB")
+#             mask = Image.open(mask_path).convert("L")
+#         except Exception as e:
+#             # If loading the file fails, move to the next valid file
+#             return self.__getitem__(idx + 1)
+
+#         if self.image_transform:
+#             image = self.image_transform(image)
+
+#         if self.mask_transform:
+#             mask = self.mask_transform(mask)
+
+#         return image, mask
 
 def create_data_loader(dataset_choice, feature_dataset_choice):
     
+    # image_transform = transforms.Compose([
+    #     ResizeTransform((512, 512)),  # Resize to 256x256
+    #     transforms.ToTensor(),
+    #     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    # ])
+    
     image_transform = transforms.Compose([
-        ResizeTransform((512, 512)),  # Resize to 256x256
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-    ])
+    ResizeTransform((224, 224)),  # Resize to 256x256 for Swin Transformer
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+   ])
+
+
     mask_transform = transforms.Compose([
         ResizeTransform((512, 512)),  # Resize to 256x256
         transforms.ToTensor()
@@ -179,6 +228,12 @@ def create_data_loader(dataset_choice, feature_dataset_choice):
         else:
             images_dir = config.POLYP_CLAHE_dataset_path + '/test/textures/Feature_' + str(feature_dataset_choice)
         masks_dir = config.POLYP_dataset_path + '/test/masks'
+    elif dataset_choice == 7:
+        if feature_dataset_choice == 10:
+            images_dir = config.CBIS_DDSM_PATCHES + '/test/images'
+        else:
+            images_dir = config.CBIS_DDSM_PATCHES + '/test/textures/Feature_' + str(feature_dataset_choice)
+        masks_dir = config.CBIS_DDSM_PATCHES + '/test/masks'
 
 
     dataset = CancerDataset(
@@ -199,7 +254,8 @@ def get_images_dir(dataset_choice, feature_dataset_choice):
         3: config.HAM_dataset_path,
         4: config.HAM_CLAHE_dataset_path,
         5: config.POLYP_dataset_path,
-        6: config.POLYP_CLAHE_dataset_path
+        6: config.POLYP_CLAHE_dataset_path,
+        7: config.CBIS_DDSM_PATCHES
     }
     
     if dataset_choice not in dataset_paths:
@@ -215,6 +271,7 @@ def get_images_dir(dataset_choice, feature_dataset_choice):
     test_masks_dir = base_path + test_masks_suffix
     
     return train_images_dir, test_images_dir, test_masks_dir
+
 
 def test_model():
     clear_screen() #clears the terminal screen
@@ -241,6 +298,8 @@ def test_model():
         dataset = 'POLYP'
     elif dataset_choice == 6:
         dataset = 'POLYP_CLAHE'
+    elif dataset_choice == 7:
+        dataset = 'CBIS_DDSM_PATCHES'
 
     if model_choice == 1:
         test_deeplab(config.results_path + "/Deeplab/" + dataset + "/Feature_" + str(feature_dataset_choice) + '/Deeplab_test.csv', dataset, feature_dataset_choice, data_loader)
